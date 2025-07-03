@@ -1,0 +1,131 @@
+{% extends 'tess.html' %}
+
+{% block title %}Meaningful{% endblock %}
+
+{% block content %}
+<script src="https://cdn.tailwindcss.com"></script>
+
+<section class="bg-white p-8 rounded-xl shadow-lg max-w-3xl w-full mx-auto mt-10">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="bg-green-100 text-green-800 text-sm font-medium text-center p-3 rounded mb-4">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Indikator Progress -->
+    <div class="mb-6">
+        <div class="text-center text-sm font-medium text-gray-600 mb-2">
+            Langkah 1 dari 5: Meaningful Objectives
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-blue-600 h-2 rounded-full" style="width: 20%;"></div>
+        </div>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="overflow-x-auto">
+            <table class="table-auto w-full text-sm border border-gray-300 bg-gray-50">
+                <tbody>
+                    <tr class="border-b">
+                        <td class="p-3 font-medium text-gray-700">Nama Projek</td>
+                        <td class="p-3">
+                            {% if projek_terpilih %}
+                                <input type="hidden" name="projek" value="{{ projek_terpilih.id }}">
+                                <input type="text" value="{{ projek_terpilih.nama }}" readonly
+                                    class="w-full rounded-md border border-gray-300 p-2 bg-gray-100 text-gray-700 cursor-not-allowed" />
+                            {% else %}
+                                <p class="text-red-500 text-sm">Projek belum dipilih. <a href="{% url 'projek' %}" class="text-blue-500 underline">Pilih dari daftar projek</a></p>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr class="border-b">
+                        <td class="p-3 font-medium text-gray-700">Organizational Objectives</td>
+                        <td class="p-3">
+                            <input type="text" name="objectives" required
+                                value="{{ form.instance.objectives|default_if_none:'' }}"
+                                class="w-full rounded-md border border-gray-300 p-2 text-gray-900" />
+                        </td>
+                    </tr>
+
+                    <tr class="border-b">
+                        <td class="p-3 font-medium text-gray-700">User Outcomes</td>
+                        <td class="p-3">
+                            <input type="text" name="outcomes" required
+                                value="{{ form.instance.outcomes|default_if_none:'' }}"
+                                class="w-full rounded-md border border-gray-300 p-2 text-gray-900" />
+                        </td>
+                    </tr>
+
+                    <tr class="border-b">
+                        <td class="p-3 font-medium text-gray-700">Leading Indicator</td>
+                        <td class="p-3">
+                            <input type="text" name="indicator" required
+                                value="{{ form.instance.indicator|default_if_none:'' }}"
+                                class="w-full rounded-md border border-gray-300 p-2 text-gray-900" />
+                        </td>
+                    </tr>
+
+                    <tr class="border-b">
+                        <td class="p-3 font-medium text-gray-700">Model Properties</td>
+                        <td class="p-3">
+                            <input type="text" name="properties" required
+                                value="{{ form.instance.properties|default_if_none:'' }}"
+                                class="w-full rounded-md border border-gray-300 p-2 text-gray-900" />
+                        </td>
+                    </tr>
+
+                    <tr class="border-b">
+                        <td class="p-3 font-medium text-gray-700">Tanggal Mulai</td>
+                        <td class="p-3">
+                            <input type="date" name="tanggal_mulai" required
+                                value="{{ form.instance.tanggal_mulai|default_if_none:'' }}"
+                                class="w-full rounded-md border border-gray-300 p-2 text-gray-900" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="p-3 font-medium text-gray-700">Tanggal Akhir</td>
+                        <td class="p-3">
+                            <input type="date" name="tanggal_akhir" required
+                                value="{{ form.instance.tanggal_akhir|default_if_none:'' }}"
+                                class="w-full rounded-md border border-gray-300 p-2 text-gray-900" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tombol Navigasi -->
+        <div class="flex justify-between mt-6">
+            <a href="{% url 'projek' %}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg">
+                Previous
+            </a>
+            <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white font-medium py-2 px-6 rounded-lg">
+                Next
+            </button>
+        </div>
+    </form>
+</section>
+
+<!-- Data Yang Sudah Diinput -->
+{% if meaningful_list %}
+<section class="bg-gray-50 mt-12 p-6 rounded-xl shadow-inner max-w-4xl w-full mx-auto">
+    <h5 class="text-xl font-semibold text-center mb-4">Data Yang Sudah Diinput</h5>
+    <ul class="space-y-4">
+        {% for m in meaningful_list %}
+        <li class="p-4 bg-white border rounded-lg shadow-sm">
+            <p><strong>Projek:</strong> {{ m.projek.nama }}</p>
+            <p><strong>Organizational Objectives:</strong> {{ m.objectives }}</p>
+            <p><strong>User Outcomes:</strong> {{ m.outcomes }}</p>
+            <p><strong>Leading Indicator:</strong> {{ m.indicator }}</p>
+            <p><strong>Model Properties:</strong> {{ m.properties }}</p>
+            <p><strong>Periode:</strong> {{ m.tanggal_mulai|date:"d M Y" }} s/d {{ m.tanggal_akhir|date:"d M Y" }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+{% endblock %}

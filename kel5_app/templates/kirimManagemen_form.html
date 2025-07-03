@@ -1,0 +1,56 @@
+{% extends 'tess.html' %}
+{% load static %}
+
+{% block content %}
+<div class="flex flex-col items-start mt-10">
+  <div class="w-full bg-white p-6 rounded-lg shadow-md">
+
+    <!-- ✅ Notifikasi -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="p-3 mb-4 rounded text-white text-center {% if message.tags == 'success' %}bg-green-500{% else %}bg-red-500{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% if error %}
+      <div class="p-3 mb-4 rounded bg-yellow-500 text-white text-center">
+        {{ error }}
+      </div>
+    {% endif %}
+
+    <!-- ✅ Form input Management -->
+    <form method="POST">
+      {% csrf_token %}
+      <h2 class="text-xl font-semibold mb-5 text-center text-gray-800">Kirim Proyek ke Teman</h2>
+
+      <!-- Nama Kelompok (readonly) -->
+      <div class="mb-3">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Kelompok</label>
+        <input type="text" name="namaKelompok" value="Inteligen Engineering" readonly class="w-full border rounded px-3 py-1.5 bg-gray-100 text-gray-600 text-sm cursor-not-allowed">
+      </div>
+
+      <!-- Deskripsi -->
+      <div class="mb-3">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+        <textarea name="deskripsi" rows="4" required class="w-full border rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">{{ deskripsi|default:'' }}</textarea>
+      </div>
+
+      <!-- Status Dropdown -->
+      <div class="mb-5">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+        <select name="status" required class="w-full border rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+          <option value="">-- Pilih Status --</option>
+          <option value="belum selesai">Belum Selesai</option>
+          <option value="selesai">Selesai</option>
+        </select>
+      </div>
+
+      <button type="submit" class="w-full bg-blue-600 text-white text-sm font-semibold py-1.5 rounded hover:bg-blue-700 transition duration-200">
+        Kirim ke Teman
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends 'tess.html' %}
+{% block title %}Perencanaan{% endblock %}
+
+{% block content %}
+<script src="https://cdn.tailwindcss.com"></script>
+
+<section class="bg-white p-8 rounded-xl shadow-lg max-w-3xl w-full mx-auto mt-10">
+    <!-- Notifikasi -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="bg-green-100 text-green-800 text-sm font-medium text-center p-3 rounded mb-4">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Indikator Progress -->
+    <div class="mb-6">
+        <div class="text-center text-sm font-medium text-gray-600 mb-2">
+            Langkah 6 dari 6: Perencanaan
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-blue-600 h-2 rounded-full" style="width: 100%;"></div>
+        </div>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="overflow-x-auto">
+            <table class="table-auto w-full text-sm border border-gray-300 bg-gray-50">
+                <tbody>
+                    <tr class="border-b">
+                        <td class="p-3 font-medium text-gray-700">Nama Projek</td>
+                        <td class="p-3">
+                            {% if projek_terpilih %}
+                                <input type="hidden" name="projek" value="{{ projek_terpilih.id }}">
+                                <input type="text" value="{{ projek_terpilih.nama }}" readonly
+                                    class="w-full rounded-md border border-gray-300 p-2 bg-gray-100 text-gray-700 cursor-not-allowed" />
+                            {% else %}
+                                <p class="text-red-500 text-sm">Projek belum dipilih. <a href="{% url 'projek' %}" class="text-blue-500 underline">Pilih dari daftar projek</a></p>
+                            {% endif %}
+                        </td>
+                    </tr>
+            
+                    <tr class="border-b">
+                        <td class="p-3 font-medium text-gray-700">Deployment</td>
+                        <td class="p-3">
+                            <input type="text" name="deployment" required
+                                value="{{ form.instance.deployment|default_if_none:'' }}"
+                                class="w-full rounded-md border border-gray-300 p-2 text-gray-900" />
+                        </td>
+                    </tr>
+            
+                    <tr class="border-b">
+                        <td class="p-3 font-medium text-gray-700">Pemeliharaan</td>
+                        <td class="p-3">
+                            <input type="text" name="pemeliharaan" required
+                                value="{{ form.instance.pemeliharaan|default_if_none:'' }}"
+                                class="w-full rounded-md border border-gray-300 p-2 text-gray-900" />
+                        </td>
+                    </tr>
+            
+                    <tr>
+                        <td class="p-3 font-medium text-gray-700">Operasi</td>
+                        <td class="p-3">
+                            <input type="text" name="operasi" required
+                                value="{{ form.instance.operasi|default_if_none:'' }}"
+                                class="w-full rounded-md border border-gray-300 p-2 text-gray-900" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tombol Navigasi -->
+        <div class="flex justify-between mt-6">
+            <a href="{% url 'status' %}?projek_id={{ projek_terpilih.id }}"
+               class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg">
+                Previous
+            </a>
+            <button type="submit"
+                    class="bg-blue-700 hover:bg-blue-800 text-white font-medium py-2 px-6 rounded-lg">
+                Selesai
+            </button>
+        </div>
+    </form>
+</section>
+{% endblock %}

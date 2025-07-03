@@ -1,0 +1,65 @@
+{% extends "tess.html" %}
+{% block title %}Integrasi{% endblock  %}
+
+{% block content %}
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+    @media print {
+      .no-print { display: none !important; }
+      body { background-color: white; color: black; }
+      table { page-break-inside: avoid; border-collapse: collapse; width: 100%; }
+      table, th, td { border: 1px solid black; }
+      th, td { padding: 8px; }
+      thead { background-color: #eee !important; color: black !important; }
+      tr:hover { background-color: transparent !important; }
+    }
+</style>
+
+<section class="bg-white rounded-xl shadow p-6 mb-8">
+  <h2 class="text-xl font-semibold mb-4">Data Proyek dari Management</h2>
+  <div class="overflow-x-auto">
+    <table class="min-w-full text-sm divide-y divide-gray-200">
+      <thead class="bg-[#00AAFF] text-white">
+        <tr>
+          <th class="px-4 py-2 text-left">Nama</th>
+          <th class="px-4 py-2 text-left">Nama Aktor</th>
+          <th class="px-4 py-2 text-left">Deskripsi</th>
+          <th class="px-4 py-2 text-left">Aktivitas 1</th>
+          <th class="px-4 py-2 text-left">Aktivitas 2</th>
+          <th class="px-4 py-2 text-left">Aktivitas 3</th>
+          <th class="px-4 py-2 text-left">Tanggal Mulai</th>
+          <th class="px-4 py-2 text-left">Tanggal Selesai</th>
+          <th class="px-4 py-2 text-left no-print">Action</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        {% for p in proyek_list %}
+        <tr>
+          <td>{{ p.nama }}</td>
+          <td>{{ p.penanggungjawab }}</td>
+          <td>{{ p.deskripsi }}</td>
+          <td>{{ p.aktivitas1 }}</td>
+          <td>{{ p.aktivitas2 }}</td>
+          <td>{{ p.aktivitas3 }}</td>
+          <td>{{ p.mulai }}</td>
+          <td>{{ p.selesai }}</td>
+          <td class="px-4 py-2 no-print">
+            <form action="{% url 'delete_integrasi_proyek' p.id %}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus proyek `{{ p.nama }}`?');">
+              {% csrf_token %}
+              <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="9" class="text-center py-4">Belum ada data</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock content %}

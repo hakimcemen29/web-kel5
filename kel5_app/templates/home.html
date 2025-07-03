@@ -1,0 +1,81 @@
+{% extends 'tess.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold text-gray-800 mb-2">Selamat Datang, {{ user.username }}</h1>
+  <p class="text-gray-600 mb-6">Setiap proyek ditampilkan secara individual berdasarkan tanggal dibuat.</p>
+
+  <div class="bg-white border border-gray-200 rounded-2xl shadow p-6">
+    <h2 class="text-xl font-semibold text-gray-700 mb-4">Grafik Proyek Individual</h2>
+    <div class="overflow-x-auto">
+      <canvas id="projekChart" height="120"></canvas>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+fetch("{% url 'projek_chart_data' %}")
+  .then(response => response.json())
+  .then(data => {
+    const labels = data.map(d => `${d.tanggal} - ${d.nama}`);
+    const values = data.map(_ => 1); // setiap proyek = 1
+    const colors = labels.map((_, i) => `hsl(${i * 57 % 360}, 70%, 60%)`);
+
+    const ctx = document.getElementById('projekChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Proyek',
+          data: values,
+          backgroundColor: colors,
+          borderColor: colors,
+          borderWidth: 1,
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return `1 proyek: ${labels[context.dataIndex]}`;
+              }
+            }
+          },
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1,
+              precision: 0
+            },
+            title: {
+              display: true,
+              text: 'Jumlah Proyek'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Tanggal - Nama Proyek'
+            },
+            ticks: {
+              autoSkip: false,
+              maxRotation: 75,
+              minRotation: 45
+            }
+          }
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

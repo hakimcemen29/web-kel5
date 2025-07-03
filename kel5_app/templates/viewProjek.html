@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Detail Projek {{ projek.nama }}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Sembunyikan elemen yang tidak perlu saat mencetak */
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      body * {
+        visibility: hidden;
+      }
+      #printable-area, #printable-area * {
+        visibility: visible;
+      }
+      #printable-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+      table {
+        page-break-inside: avoid;
+        border-collapse: collapse;
+        width: 100%;
+      }
+      table, th, td {
+        border: 1px solid black;
+      }
+      th, td {
+        padding: 8px;
+        font-size: 12px;
+      }
+      thead {
+        background-color: #eee !important;
+        color: black !important;
+        -webkit-print-color-adjust: exact; /* Memastikan warna background tercetak di Chrome */
+        color-adjust: exact; /* Standar */
+      }
+    }
+
+    .text-sm {
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800 p-6">
+  <nav class="bg-white shadow px-6 py-4 flex items-center justify-between no-print">
+    <div class="flex items-center gap-4">
+      <button onclick="history.back()" class="flex items-center text-blue-500 hover:text-blue-700 transition">
+        <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+        <span class="text-base font-medium">Kembali</span>
+      </button>
+      <h4 class="text-xl text-blue-500 sm:text-2xl font-bold">Projek : {{ projek.nama }}</h4>
+    </div>
+
+    <button onclick="window.print()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition">
+      Cetak Semua
+    </button>
+  </nav>
+
+  <section id="meaningful-section" class="bg-white rounded-xl shadow p-6 mb-8">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-semibold">Meaningful Objectives</h2>
+      <button onclick="printSection('meaningful-section')" class="no-print bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-lg text-sm transition">
+        Cetak Bagian ini
+      </button>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm divide-y divide-gray-200">
+        <thead class="bg-[#00AAFF] text-white">
+          <tr>
+            <th class="px-4 py-2 text-left">Organizational Objectives</th>
+            <th class="px-4 py-2 text-left">User Outcomes</th>
+            <th class="px-4 py-2 text-left">Leading Indicator</th>
+            <th class="px-4 py-2 text-left">Model Properties</th>
+            <th class="px-4 py-2 text-left">Tanggal Mulai</th>
+            <th class="px-4 py-2 text-left">Tanggal Akhir</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          {% for item in meaningful_list %}
+          <tr>
+            <td class="px-4 py-2">{{ item.objectives }}</td>
+            <td class="px-4 py-2">{{ item.outcomes }}</td>
+            <td class="px-4 py-2">{{ item.indicator }}</td>
+            <td class="px-4 py-2">{{ item.properties }}</td>
+            <td class="px-4 py-2">{{ item.tanggal_mulai }}</td>
+            <td class="px-4 py-2">{{ item.tanggal_akhir }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="6" class="text-center py-4">Belum ada data</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="experience-section" class="bg-white rounded-xl shadow p-6 mb-8">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">Intelligence Experience</h2>
+        <button onclick="printSection('experience-section')" class="no-print bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-lg text-sm transition">
+          Cetak Bagian ini
+        </button>
+      </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm divide-y divide-gray-200">
+        <thead class="bg-[#00AAFF] text-white">
+          <tr>
+            <th class="px-4 py-2 text-left">Automate</th>
+            <th class="px-4 py-2 text-left">Prompt</th>
+            <th class="px-4 py-2 text-left">Annotate</th>
+            <th class="px-4 py-2 text-left">Organization</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          {% for item in experience_list %}
+          <tr>
+            <td class="px-4 py-2">{{ item.automate }}</td>
+            <td class="px-4 py-2">{{ item.prompt }}</td>
+            <td class="px-4 py-2">{{ item.annotate }}</td>
+            <td class="px-4 py-2">{{ item.organization }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4" class="text-center py-4">Belum ada data</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="implementasi-section" class="bg-white rounded-xl shadow p-6 mb-8">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">Intelligent Implementation</h2>
+        <button onclick="printSection('implementasi-section')" class="no-print bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-lg text-sm transition">
+          Cetak Bagian ini
+        </button>
+      </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm divide-y divide-gray-200">
+        <thead class="bg-[#00AAFF] text-white">
+          <tr>
+            <th class="px-4 py-2 text-left">Proses Bisnis Sistem Cerdas</th>
+            <th class="px-4 py-2 text-left">Teknologi Yang Akan Dipakai</th>
+            <th class="px-4 py-2 text-left">Proses Yang Akan Dibangun</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          {% for item in implementasi_list %}
+          <tr>
+            <td class="px-4 py-2">{{ item.proses }}</td>
+            <td class="px-4 py-2">{{ item.teknologi }}</td>
+            <td class="px-4 py-2">{{ item.bangun }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3" class="text-center py-4">Belum ada data</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="batasan-section" class="bg-white rounded-xl shadow p-6 mb-8">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">Batasan</h2>
+        <button onclick="printSection('batasan-section')" class="no-print bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-lg text-sm transition">
+          Cetak Bagian ini
+        </button>
+      </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm divide-y divide-gray-200">
+        <thead class="bg-[#00AAFF] text-white">
+          <tr>
+            <th class="px-4 py-2 text-left">Batasan</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          {% for item in batasan_list %}
+          <tr>
+            <td class="px-4 py-2">{{ item.batasan }}</td>
+          </tr>
+          {% empty %}
+          <tr><td class="text-center py-4">Belum ada data</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="relasi-section" class="bg-white rounded-xl shadow p-6 mb-8">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">Relasi antar Komponen</h2>
+        <button onclick="printSection('relasi-section')" class="no-print bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-lg text-sm transition">
+          Cetak Bagian ini
+        </button>
+      </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm divide-y divide-gray-200">
+        <thead class="bg-[#00AAFF] text-white">
+          <tr>
+            <th class="px-4 py-2 text-left">Status Relasi</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          {% for item in relasi_list %}
+          <tr>
+            <td class="px-4 py-2">{{ item.relasi }}</td>
+          </tr>
+          {% empty %}
+          <tr><td class="text-center py-4">Belum ada data</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="perencanaan-section" class="bg-white rounded-xl shadow p-6 mb-8">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">Perencanaan</h2>
+        <button onclick="printSection('perencanaan-section')" class="no-print bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-lg text-sm transition">
+          Cetak Bagian ini
+        </button>
+      </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm divide-y divide-gray-200">
+        <thead class="bg-[#00AAFF] text-white">
+          <tr>
+            <th class="px-4 py-2 text-left">Pelaksanaan deployment</th>
+            <th class="px-4 py-2 text-left">Pemeliharaan sistem</th>
+            <th class="px-4 py-2 text-left">Pelaksanaan operasi sistem</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          {% for item in perencanaan_list %}
+          <tr>
+            <td class="px-4 py-2">{{ item.deployment }}</td>
+            <td class="px-4 py-2">{{ item.pemeliharaan }}</td>
+            <td class="px-4 py-2">{{ item.operasi }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3" class="text-center py-4">Belum ada data</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <script>
+    function printSection(sectionId) {
+      const sectionToPrint = document.getElementById(sectionId);
+      const originalContent = document.body.innerHTML;
+      
+      // Buat area cetak sementara
+      const printArea = document.createElement('div');
+      printArea.id = 'printable-area';
+      printArea.innerHTML = sectionToPrint.innerHTML;
+      
+      // Hapus tombol cetak dari area cetak
+      const printButton = printArea.querySelector('.no-print');
+      if (printButton) {
+        printButton.remove();
+      }
+
+      document.body.innerHTML = '';
+      document.body.appendChild(printArea);
+
+      window.print();
+
+      // Kembalikan konten asli setelah mencetak
+      document.body.innerHTML = originalContent;
+      // Re-attach event listeners jika diperlukan (tidak perlu untuk kasus sederhana ini)
+    }
+  </script>
+
+</body>
+</html>
